@@ -30,7 +30,7 @@ dat_size = scanx * scany * dp_size
 
 dat = np.zeros((scany, scanx, dp_height, dp_width), dtype='uint8')
 
-with open(dir + fname + '.dat', mode='rb') as f:
+with open(datadir + fname + '.dat', mode='rb') as f:
     f.seek(-dat_size, 2)  # 2: from end of file
     for y in range(scany):
         for x in range(scanx):
@@ -41,4 +41,4 @@ with open(dir + fname + '.dat', mode='rb') as f:
 
 s = hs.signals.Signal2D(dat)
 
-s.save(dir + fname + '.hdf5')
+s.save(datadir + fname + '.hdf5')
