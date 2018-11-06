@@ -15,13 +15,13 @@ import numpy as np
 
 
 # Set file path and file name
-datadir = '/path/to/file'
+datadir = '/home/hakon/kode/nordif_astroebsd/datasett/'
 fname = 'Pattern'
 
 # Set grid dimensions and pattern size (in px). Will take this from
 # Settings.txt in the near future with regular expressions
-scanx = 409
-scany = 409
+scanx = 20
+scany = 20
 dp_width = 120 # Acquisition px
 dp_height = 120
 
