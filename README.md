@@ -1,6 +1,6 @@
 # nordif2hdf5
 
-Write diffraction patterns in the NORDIF DAT-file to an HDF5-file. To scripts are provided.
+Write diffraction patterns in the NORDIF DAT-file to an HDF5-file. Two scripts are provided.
 
 ### nordif2hdf5.py
 
@@ -15,5 +15,7 @@ This script uses HyperSpy, a multidimensional data analysis library in Python wi
 This script just uses Matlab. Running it:
 
 ```matlab
-[settings,patterns] = nordif2hdf5('/home/hakon/kode/nordif_astroebsd/datasett3/Pattern.dat');
+[settings,patterns] = nordif2hdf5('/path/to/nordif/directory/Pattern.dat');
 ```
+
+Check docstring for further details (`help nordif2hdf5`).
