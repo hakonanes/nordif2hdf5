@@ -6,7 +6,7 @@ Write diffraction patterns in the NORDIF DAT-file to an HDF5-file. Two scripts a
 
 This script uses HyperSpy, a multidimensional data analysis library in Python with loads of useful and powerful methods for processing and analysing multidimensional datasets. Running it:
 
-  * Install necessary libraries ([HyperSpy](https://github.com/hyperspy/hyperspy/) and [NumPy](http://www.numpy.org/)) into your [Conda](https://www.anaconda.com/download/) environment or virtualenv.
+  * Install necessary libraries in `requirements.txt` ([HyperSpy](https://github.com/hyperspy/hyperspy/) and [NumPy](http://www.numpy.org/)) into your [Conda](https://www.anaconda.com/download/) environment or virtualenv.
   * Change file path and name and grid dimension and pattern size in file
   * Run file
 
