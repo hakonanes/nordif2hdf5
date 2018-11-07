@@ -29,10 +29,13 @@ settingsFile = fullfile(filepath,'Setting.txt');
 text = textread(settingsFile,'%s','delimiter','\n');
 
 % Find pixel size of patterns in file
-acquisitionOccurence = regexp(text,'Acquisition settings');
-acquisitionRow = find(~cellfun(@isempty,acquisitionOccurence));
-patternSizeString = textscan(text{acquisitionRow + 2},'%s');
-Settings.PATTERNSIZE = str2double(patternSizeString{1}{2}(1:3));
+acquisitionOccurence = regexp(text,'Acquisition settings'); % Find expression
+acquisitionRow = find(~cellfun(@isempty,acquisitionOccurence)); % Find line
+patternSizeString = textscan(text{acquisitionRow + 2},'%s'); % Read line
+patternSizeString = patternSizeString{1}{2}; % Get relevant part of string
+patternSizeString = strsplit(patternSizeString,'x'); % Split string
+Settings.PATTERNWIDTH = str2double(patternSizeString{1});
+Settings.PATTERNHEIGHT = str2double(patternSizeString{2});
 
 % Find grid dimensions in file
 areaOccurence = regexp(text,'Area','match');
@@ -48,7 +51,7 @@ fid = fopen(DATFilename);
 patterns = fread(fid,'*uint8');
 
 % Shape (size) of data matrix
-matrixShape = [Settings.PATTERNSIZE,Settings.PATTERNSIZE,Settings.NCOLS,...
+matrixShape = [Settings.PATTERNWIDTH,Settings.PATTERNHEIGHT,Settings.NCOLS,...
     Settings.NROWS];
 
 % Reshape patterns into 4D array
