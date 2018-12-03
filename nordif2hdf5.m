@@ -32,8 +32,7 @@ text = textread(settingsFile,'%s','delimiter','\n');
 acquisitionOccurence = regexp(text,'Acquisition settings'); % Find expression
 acquisitionRow = find(~cellfun(@isempty,acquisitionOccurence)); % Find line
 patternSizeString = textscan(text{acquisitionRow + 2},'%s'); % Read line
-patternSizeString = patternSizeString{1}{2}; % Get relevant part of string
-patternSizeString = strsplit(patternSizeString,'x'); % Split string
+patternSizeString = strsplit(patternSizeString{1}{2},'x'); % Split string
 Settings.PATTERNWIDTH = str2double(patternSizeString{1});
 Settings.PATTERNHEIGHT = str2double(patternSizeString{2});
 
@@ -46,7 +45,6 @@ Settings.NCOLS = str2num(interestingPartOfString{1});
 Settings.NROWS = str2num(interestingPartOfString{2});
 
 % Read patterns from file
-%fprintf('')
 fid = fopen(DATFilename);
 patterns = fread(fid,'*uint8');
 

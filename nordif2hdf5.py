@@ -1,44 +1,71 @@
 # -*- coding: utf-8 -*-
-"""
-Convert NORDIF DAT-file with Kikuchi diffraction patterns to HyperSpy HDF5
-format.
+#
+# Convert NORDIF DAT-file with Kikuchi diffraction patterns to HyperSpy HDF5
+# format.
 
-Assumes you can have your full dataset in memory! Will look at a smarter
-solution in the future.
-
-Created by Håkon W. Ånes (hakon.w.anes@ntnu.no)
-2018-10-30
-"""
+# Created by Håkon W. Ånes (hakon.w.anes@ntnu.no)
+# 2018-11-20
 
 import hyperspy.api as hs
 import numpy as np
+import os
+import re
+import warnings
+import argparse
 
 
-# Set file path and file name
-datadir = '/home/hakon/kode/nordif_astroebsd/datasett/'
-fname = 'Pattern'
+# Parse input parameters
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('file', help='Full path of original file')
+parser.add_argument('--lazy', dest='lazy', default=False, action='store_true',
+                    help='Whether to read/write lazy or not')
+arguments = parser.parse_args()
 
-# Set grid dimensions and pattern size (in px). Will take this from
-# Settings.txt in the near future with regular expressions
-scanx = 20
-scany = 20
-dp_width = 120 # Acquisition px
-dp_height = 120
+# Set data directory, filename and file extension
+datadir, fname = os.path.split(arguments.file)
+fname, ext = os.path.splitext(fname)
 
-dp_size = dp_width * dp_height  # 1 byte per pixel
-dat_size = scanx * scany * dp_size
+# Get grid dimensions and pattern size from Setting.txt
+settings = open(os.path.join(datadir,'Setting.txt'), 'rb')
+for i, line in enumerate(settings):
+    # Pattern size
+    if i == 47:
+        match = re.search(b'Resolution\t(.*)\tpx', line).group(1).split(b'x')
+        SX, SY = [int(i) for i in match]
+    # Grid dimensions
+    if i == 79:
+        match = re.search(b'Number of samples\t(.*)\t#',
+                          line).group(1).split(b'x')
+        NX, NY = [int(i) for i in match]
+settings.close()
 
-dat = np.zeros((scany, scanx, dp_height, dp_width), dtype='uint8')
+# Get data size
+DAT_SZ = NX * NY * SX * SY
 
-with open(datadir + fname + '.dat', mode='rb') as f:
-    f.seek(-dat_size, 2)  # 2: from end of file
-    for y in range(scany):
-        for x in range(scanx):
-            img = f.read(dp_size)
-            img = np.fromstring(img, dtype='uint8')  # creates 1-D array
-            img.shape = (dp_height, dp_width)  # make 2-D array
-            dat[y, x, :, :] = img
+# Open in correct mode
+if arguments.lazy:
+    patterns = open(arguments.file, 'r+b')
+else:
+    patterns = open(arguments.file, 'rb')
 
-s = hs.signals.Signal2D(dat)
+# Read data from file
+if not arguments.lazy:
+    patterns.seek(-DAT_SZ, 2)
+    data = np.fromfile(patterns, dtype='uint8')
+else:
+    data = np.memmap(patterns, mode='r')
 
-s.save(datadir + fname + '.hdf5')
+# Reshape data
+try:
+    data = data.reshape((NX, NY, SX, SY), order='C').squeeze()
+except ValueError:
+    warnings.warn('Setting.txt dimensions larger than file size!')
+
+# Create HyperSpy signal
+if not arguments.lazy:
+    s = hs.signals.Signal2D(data)
+else:
+    s = hs.signals.Signal2D(data).as_lazy()
+
+# Write signal to file
+s.save(os.path.join(datadir, fname + '.hdf5'))

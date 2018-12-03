@@ -19,3 +19,7 @@ This script just uses Matlab. Running it:
 ```
 
 Check docstring for further details (`help nordif2hdf5`).
+
+### hdf52nordif.py
+
+Write an HDF5 HyperSpy file with electron backscatter diffraction patterns to a binary file readable by TSL-EDAX/NORDIF software.
