@@ -1,6 +1,6 @@
 # nordif2hdf5
 
-Write diffraction patterns in the NORDIF DAT-file to an HDF5-file. Two scripts are provided.
+Write diffraction patterns in the NORDIF DAT-file to an HDF5-file, and vice versa. Three scripts are provided.
 
 ### nordif2hdf5.py
 
@@ -22,4 +22,4 @@ Check docstring for further details (`help nordif2hdf5`).
 
 ### hdf52nordif.py
 
-Write an HDF5 HyperSpy file with electron backscatter diffraction patterns to a binary file readable by TSL-EDAX/NORDIF software.
+Write an HDF5 HyperSpy file with electron backscatter diffraction patterns to a binary file readable by the NORDIF software.

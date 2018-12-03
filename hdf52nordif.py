@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 #
 # Write an HDF5 HyperSpy file with electron backscatter diffraction patterns
-# to a binary file readable by TSL-EDAX/NORDIF software
+# to a binary file readable by the NORDIF software.
 #
 # Created by Håkon W. Ånes (hakon.w.anes@ntnu.no)
 # 2018-11-28
+#
 
 import hyperspy.api as hs
 import os
